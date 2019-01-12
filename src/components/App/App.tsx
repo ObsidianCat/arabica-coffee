@@ -24,6 +24,7 @@ interface IFilters {
 interface IState {
   coffeeList: ICoffee[];
   filters: IFilters;
+  siderCollapsed: boolean
 }
 class App extends Component<{}, IState> {
   state: IState = {
@@ -32,7 +33,8 @@ class App extends Component<{}, IState> {
       country: EMPTY_FILTER,
       resistanceLevel: EMPTY_FILTER,
       variety: EMPTY_FILTER
-    }
+    },
+    siderCollapsed: false
   };
 
   componentDidMount() {
@@ -40,13 +42,23 @@ class App extends Component<{}, IState> {
   }
 
   fetchCoffeeData = (url = COFFEE_API_BASE) => {
+
     axios
       .get(url)
       .then(response => {
         this.setState({ coffeeList: response.data });
+        localStorage.setItem('coffeeData', JSON.stringify(response.data))
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        let data = localStorage.getItem('coffeeData')
+        if(data){
+          this.setState({ coffeeList: JSON.parse(data) });
+        }
+        console.error(error)
+      });
+
   };
+
 
   updateSelection = (
     selectionValue: string,
@@ -103,13 +115,21 @@ class App extends Component<{}, IState> {
     });
   }
 
+  onCollapse = (siderCollapsed:boolean) => {
+    this.setState({ siderCollapsed });
+  }
+
   render() {
     const { coffeeList } = this.state;
     const filteredCoffees = this.applyFilters(coffeeList);
     return (
       <div className="App">
         <Layout>
-          <Sider className='sidebar'>
+          <Sider className='sidebar'
+                 collapsible
+                 collapsed={this.state.siderCollapsed}
+                 onCollapse={this.onCollapse}
+                 >
             {coffeeList.length > 0 && (
               <CoffeeFilters
                 countries={this.extractCountries(coffeeList)}

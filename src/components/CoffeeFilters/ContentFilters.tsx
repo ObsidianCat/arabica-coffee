@@ -1,6 +1,3 @@
-import { ICoffee } from "../../interfaces/ICoffee";
-import { Card } from "antd";
-import { IDisease } from "../../interfaces/IDisease";
 import { Select } from "antd";
 import React, { Component } from "react";
 import {
@@ -63,9 +60,9 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
       <div>
         <p className="menu-labels">Select a country</p>
         <Select
+          className="select-filter"
           defaultValue={ALL_SELECTED}
           placeholder="Select a country"
-          style={{ width: 200 }}
           onChange={(value: string) =>
             this.props.updateSelection(value, FILTER_SELECTION_TYPE.COUNTRY)
           }
@@ -75,9 +72,10 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
         <p className="menu-labels">Select a variety</p>
 
         <Select
+          className="select-filter"
+
           defaultValue={ALL_SELECTED}
           placeholder="Select a variety"
-          style={{ width: 200 }}
           onChange={(value: string) =>
             this.props.updateSelection(value, FILTER_SELECTION_TYPE.VARIETY)
           }
@@ -87,9 +85,10 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
         <p className="menu-labels" >Select a resistance level</p>
 
         <Select
+          className="select-filter"
+
           defaultValue={ALL_SELECTED}
           placeholder="Select a resistance level"
-          style={{ width: 200 }}
           onChange={(value: string) =>
             this.props.updateSelection(value, FILTER_SELECTION_TYPE.RESISTANCE_LEVEL)
           }
