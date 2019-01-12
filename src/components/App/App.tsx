@@ -42,6 +42,12 @@ class App extends Component<{}, IState> {
   }
 
   fetchCoffeeData = (url = COFFEE_API_BASE) => {
+    // Very basic cache first decision, ok only for test app with the api responses which does not not changes
+    let data = localStorage.getItem('coffeeData')
+    if(data){
+      this.setState({ coffeeList: JSON.parse(data) });
+      return
+    }
 
     axios
       .get(url)
@@ -50,10 +56,6 @@ class App extends Component<{}, IState> {
         localStorage.setItem('coffeeData', JSON.stringify(response.data))
       })
       .catch(error => {
-        let data = localStorage.getItem('coffeeData')
-        if(data){
-          this.setState({ coffeeList: JSON.parse(data) });
-        }
         console.error(error)
       });
 
@@ -73,9 +75,7 @@ class App extends Component<{}, IState> {
         })
       };
     });
-
-    console.log(this.state);
-  };
+    };
 
   applyFilters(coffeeList: ICoffee[]) {
     const filters = this.state.filters;
@@ -124,12 +124,12 @@ class App extends Component<{}, IState> {
     const filteredCoffees = this.applyFilters(coffeeList);
     return (
       <div className="App">
-        <Layout>
+        <Layout style={{ minHeight: '100vh' }}>
           <Sider className='sidebar'
-                 collapsible
-                 collapsed={this.state.siderCollapsed}
-                 onCollapse={this.onCollapse}
-                 >
+            collapsible
+            collapsed={this.state.siderCollapsed}
+            onCollapse={this.onCollapse}
+          >
             {coffeeList.length > 0 && (
               <CoffeeFilters
                 countries={this.extractCountries(coffeeList)}
@@ -138,8 +138,8 @@ class App extends Component<{}, IState> {
               />
             )}
           </Sider>
-          <Layout className='coffee-main-content' >
-            <Content className='coffee-main-content__inner'>
+          <Layout className='coffee-main-content'>
+            <Content  className='coffee-main-content__inner' style={{ margin: '0 16px' }} >
               {filteredCoffees.map((item: ICoffee) => {
                 return <CoffeeItem key={item.name} coffee={item} />;
               })}
