@@ -2,18 +2,23 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./App.css";
 import axios from "axios";
-import { COFFEE_API_BASE, EMPTY_FILTER, FILTER_SELECTION_TYPE } from "../../appConfig";
+import {
+  ALL_SELECTED,
+  COFFEE_API_BASE,
+  EMPTY_FILTER,
+  FILTER_SELECTION_TYPE
+} from "../../appConfig";
 import { ICoffee } from "../../interfaces/ICoffee";
 import CoffeeItem from "../CoffeeItem/CoffeeItem";
 
 import { Layout } from "antd";
 import CoffeeFilters from "../CoffeeFilters/ContentFilter";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 interface IFilters {
   country: string;
-  diseaseResistance: string;
+  resistanceLevel: string;
   variety: string;
 }
 interface IState {
@@ -25,7 +30,7 @@ class App extends Component<{}, IState> {
     coffeeList: [],
     filters: {
       country: EMPTY_FILTER,
-      diseaseResistance: EMPTY_FILTER,
+      resistanceLevel: EMPTY_FILTER,
       variety: EMPTY_FILTER
     }
   };
@@ -38,33 +43,47 @@ class App extends Component<{}, IState> {
     axios
       .get(url)
       .then(response => {
-        console.log(response.data);
         this.setState({ coffeeList: response.data });
-        console.log(this.state);
       })
       .catch(error => console.error(error));
   };
 
-  updateSelection(selectionValue: string, selectionType: FILTER_SELECTION_TYPE) {
-    switch (selectionType) {
-      case FILTER_SELECTION_TYPE.COUNTRY:
+  updateSelection = (
+    selectionValue: string,
+    selectionType: FILTER_SELECTION_TYPE
+  ) => {
+    selectionValue =
+      selectionValue != ALL_SELECTED ? selectionValue : EMPTY_FILTER;
+    this.setState(prevState => {
+      return {
+        filters: Object.assign(prevState.filters, {
+          [selectionType]: selectionValue
+        })
+      };
+    });
 
-        break;
-    }
-  }
+    console.log(this.state);
+  };
 
-  applyFilters(cofffeeList) {
+  applyFilters(coffeeList: ICoffee[]) {
     const filters = this.state.filters;
-    const filtered = this.state.coffeeList.filter(item => {
+    const filtered = coffeeList.filter(item => {
+      const resistancesSet = new Set()
+      item.disease_resistance.forEach((item)=> {
+        resistancesSet.add(Object.values(item)[0])
+      })
+
       const inCountrySelection =
         filters.country === EMPTY_FILTER ||
         item.producing_countries.includes(filters.country);
       const inVarietySelection =
         filters.variety === EMPTY_FILTER || item.name === filters.variety;
-      return inCountrySelection && inVarietySelection;
+        const inRsistanceGroup = filters.resistanceLevel === EMPTY_FILTER || resistancesSet.has(filters.resistanceLevel)
+
+      return inCountrySelection && inVarietySelection && inRsistanceGroup;
     });
 
-    return filtered
+    return filtered;
   }
 
   extractCountries(coffeeList: ICoffee[]) {
@@ -86,7 +105,7 @@ class App extends Component<{}, IState> {
 
   render() {
     const { coffeeList } = this.state;
-    const filteredCoffees = this.applyFilters(coffeeList)
+    const filteredCoffees = this.applyFilters(coffeeList);
     return (
       <div className="App">
         <Layout>
