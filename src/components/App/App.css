@@ -22,11 +22,19 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.coffee-main-content{
+  height: 100Vh;
+  marginLeft: 200;
 }
+
+.coffee-main-content__inner{
+  margin: 24px 16px 0;
+  verflow: "initial";
+}
+
+.sidebar{
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0
+  }

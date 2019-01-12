@@ -8,6 +8,7 @@ import {
   FILTER_SELECTION_TYPE,
   ResistanceLevel
 } from "../../appConfig";
+import "./ContentFilters.css";
 
 const Option = Select.Option;
 
@@ -60,7 +61,9 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
     );
     return (
       <div>
+        <p className="menu-labels">Select a country</p>
         <Select
+          defaultValue={ALL_SELECTED}
           placeholder="Select a country"
           style={{ width: 200 }}
           onChange={(value: string) =>
@@ -69,7 +72,10 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
         >
           {countryOptions}
         </Select>
+        <p className="menu-labels">Select a variety</p>
+
         <Select
+          defaultValue={ALL_SELECTED}
           placeholder="Select a variety"
           style={{ width: 200 }}
           onChange={(value: string) =>
@@ -78,7 +84,10 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
         >
           {varietyOptions}
         </Select>
+        <p className="menu-labels" >Select a resistance level</p>
+
         <Select
+          defaultValue={ALL_SELECTED}
           placeholder="Select a resistance level"
           style={{ width: 200 }}
           onChange={(value: string) =>

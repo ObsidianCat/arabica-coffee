@@ -12,7 +12,7 @@ import { ICoffee } from "../../interfaces/ICoffee";
 import CoffeeItem from "../CoffeeItem/CoffeeItem";
 
 import { Layout } from "antd";
-import CoffeeFilters from "../CoffeeFilters/ContentFilter";
+import CoffeeFilters from "../CoffeeFilters/ContentFilters";
 
 const { Content, Sider } = Layout;
 
@@ -109,14 +109,7 @@ class App extends Component<{}, IState> {
     return (
       <div className="App">
         <Layout>
-          <Sider
-            style={{
-              overflow: "auto",
-              height: "100vh",
-              position: "fixed",
-              left: 0
-            }}
-          >
+          <Sider className='sidebar'>
             {coffeeList.length > 0 && (
               <CoffeeFilters
                 countries={this.extractCountries(coffeeList)}
@@ -125,8 +118,8 @@ class App extends Component<{}, IState> {
               />
             )}
           </Sider>
-          <Layout style={{ marginLeft: 200 }}>
-            <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+          <Layout className='coffee-main-content' >
+            <Content className='coffee-main-content__inner'>
               {filteredCoffees.map((item: ICoffee) => {
                 return <CoffeeItem key={item.name} coffee={item} />;
               })}
