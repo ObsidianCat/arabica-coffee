@@ -36,13 +36,11 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
   }
 
   createResistanceOptions() {
-    const levels = Object.keys(ResistanceLevel).map(
-      (type) => {
-        return  ResistanceLevel[type];
-      }
-    );
+    const levels = Object.keys(ResistanceLevel).map(type => {
+      return ResistanceLevel[type];
+    });
 
-    return this.convertToOptions(levels)
+    return this.convertToOptions(levels);
   }
 
   render() {
@@ -73,7 +71,6 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
 
         <Select
           className="select-filter"
-
           defaultValue={ALL_SELECTED}
           placeholder="Select a variety"
           onChange={(value: string) =>
@@ -82,15 +79,17 @@ class CoffeeFilters extends Component<CoffeeFiltersProps, {}> {
         >
           {varietyOptions}
         </Select>
-        <p className="menu-labels" >Select a resistance level</p>
+        <p className="menu-labels">Select a resistance level</p>
 
         <Select
           className="select-filter"
-
           defaultValue={ALL_SELECTED}
           placeholder="Select a resistance level"
           onChange={(value: string) =>
-            this.props.updateSelection(value, FILTER_SELECTION_TYPE.RESISTANCE_LEVEL)
+            this.props.updateSelection(
+              value,
+              FILTER_SELECTION_TYPE.RESISTANCE_LEVEL
+            )
           }
         >
           {resistanceOptions}

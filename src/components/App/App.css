@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.App__layout{
+  min-height: 100vh;
+}
+
 
 .App-link {
   color: #61dafb;
@@ -9,10 +13,9 @@
 
 .coffee-main-content{
   height: 100Vh;
-  /*//margin-left: 200;*/
 }
 
 .coffee-main-content__inner{
-  margin: 24px 16px 0;
+  margin: 0 16px;
   overflow: initial;
 }

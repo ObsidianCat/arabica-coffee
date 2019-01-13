@@ -6,7 +6,8 @@ import {
   ALL_SELECTED,
   COFFEE_API_BASE,
   EMPTY_FILTER,
-  FILTER_SELECTION_TYPE
+  FILTER_SELECTION_TYPE,
+  STORAGE_KEY
 } from "../../appConfig";
 import { ICoffee } from "../../interfaces/ICoffee";
 import CoffeeItem from "../CoffeeItem/CoffeeItem";
@@ -24,7 +25,7 @@ interface IFilters {
 interface IState {
   coffeeList: ICoffee[];
   filters: IFilters;
-  siderCollapsed: boolean
+  siderCollapsed: boolean;
 }
 class App extends Component<{}, IState> {
   state: IState = {
@@ -42,25 +43,23 @@ class App extends Component<{}, IState> {
   }
 
   fetchCoffeeData = (url = COFFEE_API_BASE) => {
-    // Very basic cache first decision, ok only for test app with the api responses which does not not changes
-    let data = localStorage.getItem('coffeeData')
-    if(data){
+    // Very basic cache first decision, but ok for test app with the api responses which never changes
+    let data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
       this.setState({ coffeeList: JSON.parse(data) });
-      return
+      return;
     }
 
     axios
       .get(url)
       .then(response => {
         this.setState({ coffeeList: response.data });
-        localStorage.setItem('coffeeData', JSON.stringify(response.data))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(response.data));
       })
       .catch(error => {
-        console.error(error)
+        console.error(error);
       });
-
   };
-
 
   updateSelection = (
     selectionValue: string,
@@ -75,22 +74,24 @@ class App extends Component<{}, IState> {
         })
       };
     });
-    };
+  };
 
   applyFilters(coffeeList: ICoffee[]) {
     const filters = this.state.filters;
     const filtered = coffeeList.filter(item => {
-      const resistancesSet = new Set()
-      item.disease_resistance.forEach((item)=> {
-        resistancesSet.add(Object.values(item)[0])
-      })
+      const resistancesSet = new Set();
+      item.disease_resistance.forEach(item => {
+        resistancesSet.add(Object.values(item)[0]);
+      });
 
       const inCountrySelection =
         filters.country === EMPTY_FILTER ||
         item.producing_countries.includes(filters.country);
       const inVarietySelection =
         filters.variety === EMPTY_FILTER || item.name === filters.variety;
-        const inRsistanceGroup = filters.resistanceLevel === EMPTY_FILTER || resistancesSet.has(filters.resistanceLevel)
+      const inRsistanceGroup =
+        filters.resistanceLevel === EMPTY_FILTER ||
+        resistancesSet.has(filters.resistanceLevel);
 
       return inCountrySelection && inVarietySelection && inRsistanceGroup;
     });
@@ -115,17 +116,18 @@ class App extends Component<{}, IState> {
     });
   }
 
-  onCollapse = (siderCollapsed:boolean) => {
+  onCollapse = (siderCollapsed: boolean) => {
     this.setState({ siderCollapsed });
-  }
+  };
 
   render() {
     const { coffeeList } = this.state;
     const filteredCoffees = this.applyFilters(coffeeList);
     return (
       <div className="App">
-        <Layout style={{ minHeight: '100vh' }}>
-          <Sider className='sidebar'
+        <Layout className="App__layout">
+          <Sider
+            className="sidebar"
             collapsible
             collapsed={this.state.siderCollapsed}
             onCollapse={this.onCollapse}
@@ -138,8 +140,8 @@ class App extends Component<{}, IState> {
               />
             )}
           </Sider>
-          <Layout className='coffee-main-content'>
-            <Content  className='coffee-main-content__inner' style={{ margin: '0 16px' }} >
+          <Layout className="coffee-main-content">
+            <Content className="coffee-main-content__inner">
               {filteredCoffees.map((item: ICoffee) => {
                 return <CoffeeItem key={item.name} coffee={item} />;
               })}

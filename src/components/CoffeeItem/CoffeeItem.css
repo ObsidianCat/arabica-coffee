@@ -1,3 +1,10 @@
 .coffee-item {
   padding: 10px;
 }
+.coffee-item__country {
+  padding: 5px;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin: 5px;
+}
